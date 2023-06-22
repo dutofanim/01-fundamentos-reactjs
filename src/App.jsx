@@ -56,8 +56,6 @@ const posts = [
 ] 
 
 export function App() {
-
-  console.log(posts.length);
   return (
     <div>
       <Header />

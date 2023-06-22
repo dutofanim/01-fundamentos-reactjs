@@ -1,34 +1,52 @@
+import PropTypes from 'prop-types'
+
+import { format, formatDistanceToNow } from 'date-fns'
+import ptBR from 'date-fns/locale/pt-BR'
+
 import { Avatar } from './Avatar'
 import { Comment } from './Comment'
 import styles from './Post.module.css'
 
+export function Post({ author, publishedAt, content }) {
 
-export function Post(props) {
-    console.log(props)
-    
+    let keyNumber = 0;
+
+    const titleDate = format(publishedAt, "d 'de' LLLL 'às' HH:mm'h'", {
+        locale: ptBR
+    })
+
+    const publishedDateRelativeToNow = formatDistanceToNow(publishedAt, {
+        locale: ptBR,
+        addSuffix: true
+    })
+
     return (
         <article className={styles.post}>
             <header className={styles.postHeader}>
                 <div className={styles.author}>
                     <Avatar
-                        src="https://github.com/dutofanim.png"
+                        src={author.avatarUrl}
                     />
                     <div className={styles.authorInfo}>
-                        <strong>Carlos Eduardo Tofanim</strong>
-                        <span>Web Developer</span>
+                        <strong>{author.name}</strong>
+                        <span>{author.role}</span>
                     </div>
                 </div>
-                <time title='20 de Junho às 14:15' dateTime='2023-06-20 14:15:00' className={styles.headerTime}>Públicado à 1h</time>
+                <time title={titleDate} dateTime={publishedAt.toISOString()} className={styles.headerTime}>
+                    {publishedDateRelativeToNow}
+                </time>
             </header>
             <div className={styles.content}>
-                <p>Fala galeraa 👋</p>
-                <p>Acabei de subir mais um projeto no meu portifa. É um projeto que fiz no NLW Return, evento da Rocketseat. O nome do projeto é DoctorCare 🚀</p>
-                <p>👉 {'  '}<a href="">jane.design/doctorcare</a></p>
-                <p>
-                    <a href="">#novoprojeto</a>{' '}
-                    <a href="">#nlw</a>{' '}
-                    <a href="">#rocketseat</a>
-                </p>
+                {content.map(item => {
+                    
+                    if (item.type === 'paragraph') {
+                        keyNumber += 1;
+                        return <p key={keyNumber}>{item.content}</p>
+                    } else if (item.type === 'link') {
+                        keyNumber += 1;
+                        return <p key={keyNumber}><a href='#'>{item.content}</a></p>
+                    }
+                })}
             </div>
             <form className={styles.commentForm}>
                 <strong>Deixe seu feedback</strong>
@@ -46,4 +64,11 @@ export function Post(props) {
             </div>
         </article>
     )
+}
+
+Post.propTypes = {
+    id: PropTypes.number,
+    author: PropTypes.object,
+    content: PropTypes.array,
+    publishedAt: PropTypes.any
 }
