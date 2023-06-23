@@ -27,7 +27,8 @@ export function Post({ author, publishedAt, content }) {
     
     function handleCreateNewContent() {
         event.preventDefault();
-        setComments([...comments, newCommentText]);    
+        setComments([...comments, newCommentText])
+        setNewCommentText('');   
     }
 
     function handleNewCommentChange() {
@@ -51,14 +52,14 @@ export function Post({ author, publishedAt, content }) {
                 </time>
             </header>
             <div className={styles.content}>
-                {content.map((item, index) => {
+                {content.map(item => {
                     
                     if (item.type === 'paragraph') {
-                        return (<p key={index}>
+                        return (<p key={item.content}>
                                     {item.content}
                                 </p>)
                     } else if (item.type === 'link') {
-                        return (<p key={index}>
+                        return (<p key={item.content}>
                                     <a href='#'>
                                         {item.content}
                                     </a>
@@ -78,9 +79,9 @@ export function Post({ author, publishedAt, content }) {
                 </footer>
             </form>
             <div className={styles.commentList}>
-                {comments.map((comment, index) => {
+                {comments.map(comment => {
                     return <Comment
-                                key={index}
+                                key={comment}
                                 content={comment}
                             />
                 })}
